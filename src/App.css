@@ -1,5 +1,5 @@
 .app {
-	width: 40rem;
+	width: min(40rem, 80vw);
 }
 
 /* No Tours */
@@ -68,6 +68,8 @@ header h1::after {
 img {
 	display: block;
 	width: 100%;
+	/* height: 20rem;  either the height or aspect ratio will solve the problem at hand*/
+	aspect-ratio: 0.5 / 0.4;
 	object-fit: cover;
 }
 
