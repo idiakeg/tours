@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import Loading from "./Loading";
+import NoTours from "./NoTours";
+import Tours from "./Tours";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [tours, setTours] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const url = "https://course-api.com/react-tours-project";
+
+	const fetchTours = async () => {
+		setLoading(true);
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
+			setTours(data);
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+			console.log(error);
+		}
+	};
+	useEffect(() => {
+		fetchTours();
+	}, []);
+
+	const handleDelete = (id) => {
+		const filteredTours = tours.filter((tour) => tour.id !== id);
+
+		setTours(filteredTours);
+	};
+
+	const handleRefresh = () => {
+		fetchTours();
+	};
+
+	return (
+		<div className="app">
+			{loading ? (
+				<Loading />
+			) : tours.length > 0 ? (
+				<Tours handleDelete={handleDelete} tours={tours} />
+			) : (
+				<NoTours handleRefresh={handleRefresh} />
+			)}
+		</div>
+	);
 }
 
 export default App;
